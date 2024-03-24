@@ -1,0 +1,99 @@
+{% extends "disease_page.html" %}
+{% block page %}
+<br>
+<br>
+<br>
+<div id="disease_page">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 wow fadeInLeft" data-wow-delay="0.5s">
+                <h3>Lung Cancer Detection</h3>
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <input type="file" name="file" id="fileInput" accept="image/*" required>
+                    <br>
+                    <button type="submit" class="btn btn-primary">Upload Image</button>
+                </form>
+                <div id="result"></div>
+            </div>
+
+            <div class="col-md-6 col-sm-6 wow fadeInRight" data-wow-delay="0.5s">
+                <img class="ill_image" src="./static/images/disease_img/lung_cancer_image.jpg">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-sm-6 wow fadeInRight" data-wow-delay="0.5s">
+                <h4>Overview</h4>
+                <p>Lung cancer is a type of cancer that begins in the lungs. Your lungs are two spongy organs in your chest that take in oxygen when you inhale and release carbon dioxide when you exhale. Lung cancer is the leading cause of cancer deaths in the United States, among both men and women.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-sm-6 wow fadeInRight" data-wow-delay="0.5s">
+                <h4>Symptoms</h4>
+                <p>The signs and symptoms of lung cancer can vary widely, depending on where the cancer is located and how advanced it is. Common symptoms include:</p>
+                <ul>
+                    <li>Chronic cough</li>
+                    <li>Chest pain</li>
+                    <li>Coughing up blood</li>
+                    <li>Shortness of breath</li>
+                    <li>Wheezing</li>
+                    <li>Hoarseness</li>
+                    <li>Unexplained weight loss</li>
+                    <li>Repeated respiratory infections</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-sm-6 wow fadeInRight" data-wow-delay="0.5s">
+                <h3>Model</h3>
+                <p>To make the diagnosis, you need to upload an X-ray image of your lungs.</p>
+                <p>The model returns "NORMAL" if there is no sign of lung cancer and "LUNG CANCER" if it detects cancerous symptoms.</p>
+            </div>
+
+            <div class="col-md-6 col-sm-6  wow fadeInRight" data-wow-delay="0.5s">
+                <div class="flex-wrapper" style="padding-top: 60px;">
+                    <div class="single-chart">
+                        <svg viewBox="0 0 36 36" class="circular-chart orange">
+                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circle" stroke-dasharray="86, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <text x="18" y="20.35" class="percentage">94%</text>
+                        </svg>
+                        <h4 style="text-align: center;">Accuracy</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <div class="prediction text-center">
+        <a href="/lung_cancer_form" class="smoothScroll">Predict</a>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+</div>
+
+<script>
+    document.getElementById('uploadForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+
+        fetch('/lung_cancer', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('result').innerHTML = data;
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
+{% endblock %}
