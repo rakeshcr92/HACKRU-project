@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lung Cancer Detection Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .result-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .prediction {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Lung Cancer Detection Result</h1>
+    <div class="result-container">
+        <p class="prediction">Prediction: {{ prediction }}</p>
+        <img src="{{ image }}" alt="Uploaded Image">
+    </div>
+</body>
+
+</html>
