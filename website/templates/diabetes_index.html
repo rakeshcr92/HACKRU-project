@@ -1,0 +1,161 @@
+{% extends "disease_page.html" %}
+{% block page %}
+  <style>
+    body, h3, h4, p, ul, li {
+      font-family: 'Arial', sans-serif;
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -15px;
+    }
+    .col-md-6, .col-sm-6 {
+      padding: 15px;
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+    h3 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    h4 {
+      margin-top: 20px;
+      color: #555;
+    }
+    p, li {
+      color: #666;
+      line-height: 1.6;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    ul li:before {
+      content: '•';
+      color: #FF6347; /* Tomato */
+      font-weight: bold;
+      display: inline-block; 
+      width: 1em;
+      margin-left: -1em;
+    }
+    .circular-chart {
+      display: block;
+      margin: 10px auto;
+      max-width: 80%;
+      max-height: 250px;
+    }
+    .circle-bg {
+      fill: none;
+      stroke: #eee;
+      stroke-width: 3.8;
+    }
+    .circle {
+      fill: none;
+      stroke-width: 2.8;
+      stroke-linecap: round;
+      animation: progress 1s ease-out forwards;
+    }
+    .percentage {
+      fill: #666;
+      font-family: sans-serif;
+      font-size: 0.5em;
+      text-anchor: middle;
+    }
+    .btn-success {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 24px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    .btn-success:hover {
+      background-color: #45a049;
+    }
+    @keyframes progress {
+      0% {
+        stroke-dasharray: 0 100;
+      }
+    }
+  </style>
+  <div id="disease_page" class="container">
+    <div class="row">
+      <div class="col-md-6 col-sm-6">
+        <h3>Diabetes</h3>
+        <h4>Overview</h4>
+        <p>Diabetes mellitus refers to a group of diseases that affect how your body uses blood sugar (glucose). Glucose is vital to your health because it's an important source of energy for the cells that make up your muscles and tissues. It's also your brain's main source of fuel. The underlying cause of diabetes varies by type. But, no matter what type of diabetes you have, it can lead to excess sugar in your blood. Too much sugar in your blood can lead to serious health problems. Chronic diabetes conditions include type 1 diabetes and type 2 diabetes. Potentially reversible diabetes conditions include prediabetes and gestational diabetes. Prediabetes occurs when your blood sugar levels are higher than normal, but not high enough to be classified as diabetes. And prediabetes is often the precursor of diabetes unless appropriate measures are taken to prevent progression. Gestational diabetes occurs during pregnancy but may resolve after the baby is delivered.</p>
+      </div>
+      <div class="col-md-6 col-sm-6">
+        <img class="ill_image" src="./static/images/disease_img/thediabete1.jpg" style="max-width:100%; height:auto;">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-sm-6">
+        <h4>Symptoms</h4>
+        <p>Diabetes symptoms vary depending on how much your blood sugar is elevated. Some people, especially those with prediabetes or type 2 diabetes, may not experience symptoms at all. In type 1 diabetes, symptoms tend to come on quickly and be more severe.</p>
+        <ul>
+          <li>Increased thirst and extreme hunger</li>
+          <li>Frequent urination</li>
+          <li>Unexplained weight loss</li>
+          <li>Presence of ketones in the urine (ketones are a byproduct of the breakdown of muscle and fat that happens when there's not enough available insulin)</li>
+          <li>Fatigue</li>
+          <li>Irritability</li>
+          <li>Blurred vision</li>
+        </ul>
+      </div>
+      <div id="disease_page" class="container">
+        <!-- Placeholder for future content or for symmetry -->
+        <div class="row">
+          <div class="col-md-6 col-sm-6">
+            <!-- Intentionally left blank for future content -->
+          </div>
+          <div class="col-md-6 col-sm-6">
+            <!-- This space can be used for future content or kept for symmetry -->
+          </div>
+        </div>
+        <!-- Model Information Row -->
+        <div class="row">
+          <!-- Model Information Column -->
+          <div class="col-md-6 col-sm-6">
+            <h3>Model</h3>
+            <p>To make the diagnosis you need to enter the following information:</p>
+            <ul>
+              <li>Pregnancies: Number of times pregnant</li>
+              <li>Glucose: Plasma glucose concentration a 2 hours in an oral glucose tolerance test</li>
+              <li>BloodPressure: Diastolic blood pressure (mm Hg)</li>
+              <li>SkinThickness: Triceps skin fold thickness (mm)</li>
+              <li>Insulin: 2-Hour serum insulin (mu U/ml)</li>
+              <li>BMI: Body mass index (weight in kg/(height in m)^2)</li>
+              <li>Diabetes pedigree function: a function which scores likelihood of diabetes based on family history</li>
+              <li>Age (years)</li>
+            </ul>
+          </div>
+          <!-- Chart Column -->
+          <div class="col-md-6 col-sm-6">
+            <div class="flex-wrapper">
+              <div class="single-chart">
+                <svg viewBox="0 0 36 36" class="circular-chart orange">
+                  <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                  <path class="circle" stroke-dasharray="86, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                  <text x="18" y="20.35" class="percentage">86%</text>
+                </svg>
+                <h4 style="text-align: center;">Accuracy</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Prediction Button -->
+        <div class="prediction text-center" style="margin-top: 40px;">
+          <a href="/diabete_form" class="smoothScroll">Predict</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
