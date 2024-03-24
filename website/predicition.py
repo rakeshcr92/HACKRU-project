@@ -1,100 +1,41 @@
-﻿from flask import Blueprint, render_template, request, send_from_directory
-from .app_functions import ValuePredictor, pred
 import os
-from werkzeug.utils import secure_filename
-import cv2
+import pickle
+import random
 import numpy as np
-
-prediction = Blueprint('prediction', __name__)
-
-UPLOAD_FOLDER = 'uploads'
-STATIC_FOLDER = 'static'
-
-dir_path = os.path.dirname(os.path.realpath(__file__))
-
-
-def preprocess_image(image_path, target_size):
-    import cv2
-    image = cv2.imread(image_path)
-    image = cv2.resize(image, target_size)
-    image = np.array(image) / 255.0  # Normalize pixel values
-    return image
-
+import xgboost
+from sklearn.preprocessing import StandardScaler
+from tensorflow.keras.preprocessing.image import load_img
 from tensorflow.keras.models import load_model
+from werkzeug.utils import secure_filename
 
-# Load the model
-model = load_model('/Users/rakeshcavala/Desktop/hc/website/app_models/Lung_Model.h5')
+def load_saved_model(path):
+    model = load_model(path, compile=False)
+    return model
 
+def predict_pneumonia(path):
+    data = load_img(path, target_size=(224, 224, 3))
+    data = np.asarray(data).reshape((-1, 224, 224, 3))
+    data = data * 1.0 / 255
+    pneumonia_model_path = './website/app_models/pneumonia_model.h5'
+    predicted = np.round(load_saved_model(pneumonia_model_path).predict(data)[0])[0]
+    return predicted
 
-@prediction.route('/lung_cancer', methods=['POST'])
-def lung_cancer():
-    import cv2
-    if request.method == 'POST':
-        # Get the uploaded image file
-        file = request.files['file']
-        
-        # Save the uploaded image temporarily
-        image_path = 'temp_image.jpg'
-        file.save(image_path)
-        
-        # Preprocess the uploaded image
-        target_size = (224, 224)  # Update with the input dimensions of your model
-        processed_image = preprocess_image(image_path, target_size)
-        
-        # Reshape the image to match the input shape expected by the model
-        processed_image = np.expand_dims(processed_image, axis=0)
-        
-        # Make predictions
-
-        predictions = model.predict(processed_image)
-        # Get the predicted class label
-        predicted_class = np.argmax(predictions, axis=1)[0]  # Selecting the first (and only) element
-
-# Define class labels
-        class_labels = ['Normal', 'Malignant', 'Benign']
-
-# Get the predicted class name
-        prediction = class_labels[predicted_class]
-
-        
-        # Remove the temporary image file
-        
-        
-        # Return the prediction result to the user
-        return render_template('lr_result.html', prediction=prediction, image = image_path)
-
-@prediction.route('/predict', methods=["POST", 'GET'])
-def predict():
-
-    if request.method == "POST":
-        to_predict_list = request.form.to_dict()
-        to_predict_list = list(to_predict_list.values())
-        to_predict_list = list(map(float, to_predict_list))
-        result, page = ValuePredictor(to_predict_list) 
-        return render_template("result.html", prediction=result, page=page)
+def value_predictor(to_predict_list):
+    if len(to_predict_list) == 15:
+        model_path = './website/app_models/kidney_model.pkl'
+        page = 'kidney'
+    elif len(to_predict_list) == 10:
+        model_path = './website/app_models/liver_model.pkl'
+        page = 'liver'
+    elif len(to_predict_list) == 11:
+        model_path = './website/app_models/heart_model.pkl'
+        page = 'heart'
+ 
     else:
-        return render_template( 'base.html')
+        with open(model_path, 'rb') as f:
+            model = pickle.load(f)
+        pred = model.predict(np.array(to_predict_list).reshape((-1, len(to_predict_list))))
 
-@prediction.route('/upload', methods=['POST','GET'])
-def upload_file():
-    if request.method=="GET":
-        return render_template('pneumonia.html', title='Pneumonia Disease')
-    else:
-        file = request.files["file"]
-        basepath = os.path.dirname(__file__)
-        file_path = os.path.join(basepath,'uploads',  secure_filename(file.filename))
-        file.save(file_path)
-        indices = {0: 'Normal', 1: 'Pneumonia'}
-        result = pred(file_path)
-
-        if result>0.5:
-            label = indices[1]
-            accuracy = result * 100
-        else:
-            label = indices[0]
-            accuracy = 100 - result
-        return render_template('deep_pred.html', image_file_name=file.filename, label = label, accuracy = accuracy)
-
-@prediction.route('/uploads/<filename>')
-def send_file(filename):
-    return send_from_directory(UPLOAD_FOLDER, filename)
+    if page != 'stroke':
+        print(pred[0], page)
+    return pred[0], page
